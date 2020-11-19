@@ -1,47 +1,57 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import {React,useState} from 'react';
+import Bar from '../components/appBar';
+import PopUp from '../components/popUp';
+import firebase from '../dataBase/firebase';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
-
-
-const Home = (props) => {
-
-    const classes = useStyles();
-
-    return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-            Boat Library
-            </Typography>
-            <Button color="inherit" onClick={props.handleLogOut}>LogOut</Button>
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
+const handleLogOut = () => {
+    
+    firebase.auth().signOut();
   }
 
+const getUid = () => {
+    const user = firebase.auth().currentUser;
+    return user.email; 
+}
+const boats = [];
 
+
+const Home = () => {
+
+
+    const [open, setOpen] = useState(false);
+    const [boatName,setBoatName] = useState('');
+    
+      const handleClickOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
+    
+      const clearInputs = () => {
+          setBoatName('')
+      }
+
+      const save = () => {
+        clearInputs();
+        handleClose();
+        boats.push(boatName);
+        firebase.firestore().collection('users').doc('Boats').set({boatName});
+        console.log(boats);
+    }
+
+
+    return (
+    <div>
+      <Bar handleLogOut={handleLogOut} handleClickOpen={handleClickOpen}/>
+        <h1>Welcome {getUid()}</h1>
+        <PopUp open={open} handleClose={handleClose} save={save}
+         boatName={boatName} setBoatName={setBoatName}/>
+
+    </div>
+    );
+}
 
 
 export default Home; 

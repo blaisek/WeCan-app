@@ -69,6 +69,8 @@ const SignUp = (props) => {
                     case "auth/wrong-password":
                         setPassWordError(err.message);
                         break;
+                    default:
+                      console.log(err);
                     
                 }
             })
@@ -88,6 +90,8 @@ const SignUp = (props) => {
                     case "auth/weak-password":
                         setPassWordError(err.message);
                         break;
+                    default:
+                      console.log(err);
                     
                 }
             })
