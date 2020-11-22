@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import firebase from '../dataBase/firebase';
+import {auth} from '../dataBase/firebase';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -57,7 +57,7 @@ const SignUp = (props) => {
         const handleSignIn = (e) => {
             e.preventDefault();
             clearErrors();
-            firebase.auth()
+            auth
             .signInWithEmailAndPassword(email,password)
             .catch(err => {
                 switch(err.code){
@@ -79,7 +79,7 @@ const SignUp = (props) => {
         const handleSignUp = (e) => {
             e.preventDefault();
             clearErrors();
-            firebase.auth()
+            auth
             .createUserWithEmailAndPassword(email,password)
             .catch(err => {
                 switch(err.code){

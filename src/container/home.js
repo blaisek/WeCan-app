@@ -1,25 +1,22 @@
 import {React,useState} from 'react';
 import Bar from '../components/appBar';
 import PopUp from '../components/popUp';
-import firebase from '../dataBase/firebase';
+import {auth,db} from '../dataBase/firebase';
 
 const handleLogOut = () => {
-    
-    firebase.auth().signOut();
+    auth.signOut();
   }
-
-const getUid = () => {
-    const user = firebase.auth().currentUser;
-    return user.email; 
-}
-const boats = [];
 
 
 const Home = () => {
 
-
-    const [open, setOpen] = useState(false);
-    const [boatName,setBoatName] = useState('');
+  const user = auth.currentUser;
+  const userId = user.uid;
+  // const boat = db.collection('users'/'userId').doc('boats'); //à ajouter boatName
+  const boats = db.collection('users').doc(userId).collection('boats');
+  // const books = boat.collection('books'); //à ajouter title et author
+  const [open, setOpen] = useState(false);
+  const [boatName,setBoatName] = useState('');
     
       const handleClickOpen = () => {
         setOpen(true);
@@ -31,22 +28,25 @@ const Home = () => {
     
       const clearInputs = () => {
           setBoatName('')
-      }
+      };
 
-      const save = () => {
+      const  addBoat =  async () => {
+
         clearInputs();
         handleClose();
-        boats.push(boatName);
-        firebase.firestore().collection('users').doc('Boats').set({boatName});
-        console.log(boats);
+
+        const data = {
+          'boatname': boatName
+        }
+
+        await boats.doc().set(data,{ merge: true })
     }
 
 
     return (
     <div>
       <Bar handleLogOut={handleLogOut} handleClickOpen={handleClickOpen}/>
-        <h1>Welcome {getUid()}</h1>
-        <PopUp open={open} handleClose={handleClose} save={save}
+        <PopUp open={open} handleClose={handleClose} save={addBoat}
          boatName={boatName} setBoatName={setBoatName}/>
 
     </div>

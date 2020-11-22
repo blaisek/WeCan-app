@@ -1,7 +1,7 @@
 import {React,useEffect,useState} from 'react'
 import './App.css';
 import SingUp from '../components/signUp';
-import firebase from '../dataBase/firebase';
+import {auth} from '../dataBase/firebase';
 import Home from '../container/home';
 
 function App() {
@@ -18,24 +18,20 @@ const  clearInputs = () => {
   setPassword('');
 } 
 
-const authListener = () => {
 
-  firebase.auth().onAuthStateChanged(user => {
-
-      if(user){
-          clearInputs();
-          setUser(user) ;
-      }else{
-          setUser('') ;
-      }
-
-  })
-
-}
 
 useEffect(()=> {
 
-  authListener();
+  auth.onAuthStateChanged(user => {
+
+    if(user){
+        clearInputs();
+        setUser(user) ;
+    }else{
+        setUser('') ;
+    }
+
+})
 
 },[]);
 
