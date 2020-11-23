@@ -10,12 +10,17 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
+import TextField from '@material-ui/core/TextField';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import clsx from 'clsx';
 import ship from '../img/Ship.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    minWidth: 345,
+    float: 'left',
+    margin:'30px'
   },
   media: {
     height: 300,
@@ -73,9 +78,24 @@ const  CustomCard = (props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
       <CardContent>
-          <Typography>
-            kdaksklld
-          </Typography>
+      <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="book"
+            label="Add Book Title and Author"
+            type="text"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary">
+            send
+          </Button>
+          </DialogActions>
+        <Typography gutterBottom variant="h5" component="h2">
+          les misérables victor hugo
+        </Typography>
       </CardContent>
       </Collapse>
     </Card>

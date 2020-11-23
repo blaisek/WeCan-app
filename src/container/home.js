@@ -49,12 +49,11 @@ const Home = () => {
 
       await  boats.get().then(querySnapshot => {
         querySnapshot.forEach((doc) => {
-        snap.push(doc.data());
-        console.log(snap);
+        snap.push(Object.values(doc.data()));
        })
      });
-
-    
+    //  console.log(snap);
+     
     }
 
     useEffect(() => {
@@ -67,13 +66,12 @@ const Home = () => {
       <Bar handleLogOut={handleLogOut} handleClickOpen={handleClickOpen}/>
         <PopUp open={open} handleClose={handleClose} save={createBoat}
          boatName={boatName} setBoatName={setBoatName}/>
-         {/* <CustomCard title='maryJane'/> */}
-         { 
-            snap.map((d,i)=> {
-            return  <CustomCard key={i} title={d}/>
-             })
-          
-        }
+         {
+          snap.map((val,i)=> (
+            <CustomCard key={i} title={val}/>
+           ))
+        }   
+    
     </div>
     );
 }
