@@ -4,21 +4,24 @@ import PopUp from '../components/popUp';
 import {auth,db} from '../dataBase/firebase';
 import CustomCard from '../components/card';
 
-const handleLogOut = () => {
-    auth.signOut();
-  }
+
 
 
 const Home = () => {
 
+  
   const user = auth.currentUser;
   const userId = user.uid;
-  // const boat = db.collection('users'/'userId').doc('boats'); //à ajouter boatName
   const boats = db.collection('users').doc(userId).collection('boats');
-  // const books = boat.collection('books'); //à ajouter title et author
+  // const books = boats.collection('books'); //à ajouter title et author
   const [open, setOpen] = useState(false);
   const [boatName,setBoatName] = useState('');
-  const snap = [];
+  const [dataReturned ,setDataReturned] = useState(false);
+  const [snap,setSnap] = useState('');
+
+      const handleLogOut = () => {
+        auth.signOut();
+      }
 
       const handleClickOpen = () => {
         setOpen(true);
@@ -44,22 +47,24 @@ const Home = () => {
         await boats.doc().set(data,{ merge: true })
     }
 
-    // TODO loop render custom card component
     const getdocument = async () => {
-
-      await  boats.get().then(querySnapshot => {
-        querySnapshot.forEach((doc) => {
-        snap.push(Object.values(doc.data()));
+      const data = [];
+     await  boats.get().then(querySnapshot => {
+        querySnapshot.forEach((el) => {
+        data.push(Object.values({...el.data()}).toString());
        })
      });
-    //  console.log(snap);
-     
-    }
+     setSnap(data);
+     setDataReturned(true);
+  }
 
     useEffect(() => {
-      getdocument();
-    },[])
 
+       getdocument();
+     
+    },[snap])
+
+    
 
     return (
     <div>
@@ -67,11 +72,12 @@ const Home = () => {
         <PopUp open={open} handleClose={handleClose} save={createBoat}
          boatName={boatName} setBoatName={setBoatName}/>
          {
-          snap.map((val,i)=> (
-            <CustomCard key={i} title={val}/>
-           ))
-        }   
-    
+          dataReturned ?
+          snap.map((val,i) => (
+            <CustomCard key={i} title={val} />
+         ))
+         :<h1>loading..</h1> 
+        }  
     </div>
     );
 }

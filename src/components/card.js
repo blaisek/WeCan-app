@@ -45,6 +45,10 @@ const  CustomCard = (props) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  const handledelete = (e) => {
+    console.log(e);
+  }
   const classes = useStyles();
 
   return (
@@ -53,7 +57,7 @@ const  CustomCard = (props) => {
         <CardMedia
           className={classes.media}
           image={ship}
-          title="Contemplative Reptile"
+          title="HISSEZ LE PAVILLON !"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
@@ -62,6 +66,9 @@ const  CustomCard = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
+      <Button size="small" color="primary" onClick={handledelete}>
+           delete 
+        </Button>
         <Button size="small" color="primary" onClick={handleExpandClick}>
           expand
         </Button>
