@@ -15,6 +15,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import clsx from 'clsx';
 import ship from '../img/Ship.jpg';
+import {auth,db} from '../dataBase/firebase';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,14 +42,18 @@ const useStyles = makeStyles((theme) => ({
 
 const  CustomCard = (props) => {
 
+  const user = auth.currentUser;
+  const userId = user.uid;
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const handledelete = (e) => {
+  const handledeleteBoat = (e) => {
     console.log(e);
+    let id = e.parentElement.getAttribute('data-id');
+    db.collection('users').doc(userId).collection('boats').doc(id).delete();
   }
   const classes = useStyles();
 
@@ -66,7 +72,7 @@ const  CustomCard = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-      <Button size="small" color="primary" onClick={handledelete}>
+      <Button size="small" color="primary" onClick={handledeleteBoat}>
            delete 
         </Button>
         <Button size="small" color="primary" onClick={handleExpandClick}>
