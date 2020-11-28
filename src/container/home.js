@@ -35,6 +35,7 @@ const Home = () => {
           setBoatName('')
       };
 
+
       const  createBoat =  async () => {
 
         clearInputs();
@@ -47,12 +48,26 @@ const Home = () => {
         await boats.doc().set(data,{ merge: true })
     }
 
+    const handleChanges =  () => {
+        boats.onSnapshot(Snapshot => {
+        let changes = Snapshot.docChanges();
+        changes.forEach(change => {
+          if(change.type == 'added'){
+            getdocument();
+          }else if (change.type == 'removed'){
+            getdocument();
+          }
+        })
+      })
+    }
+  
+
     const getdocument = async () => {
-      const data = [];
+    const data = [];
      await  boats.get().then(querySnapshot => {
-        querySnapshot.forEach((el) => {
-        data.push(Object.values({...el.data()}).toString());
-       })
+            querySnapshot.forEach ((el) => {
+              data.push(Object.values(el.data()).toString());
+          })
      });
      setSnap(data);
      setDataReturned(true);
@@ -60,7 +75,7 @@ const Home = () => {
 
     useEffect(() => {
 
-       getdocument();
+      handleChanges();
      
     },[])
 
@@ -74,7 +89,7 @@ const Home = () => {
          {
           dataReturned ?
           snap.map((val,i) => (
-            <CustomCard key={i} title={val} />
+            <CustomCard key={i} clef={i} title={val} />
          ))
          :<h1>loading..</h1> 
         }  

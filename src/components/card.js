@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const  CustomCard = (props) => {
 
+  let key = props.clef;
   const user = auth.currentUser;
   const userId = user.uid;
   const [expanded, setExpanded] = React.useState(false);
@@ -50,10 +51,15 @@ const  CustomCard = (props) => {
     setExpanded(!expanded);
   };
 
-  const handledeleteBoat = (e) => {
-    console.log(e);
-    let id = e.parentElement.getAttribute('data-id');
-    db.collection('users').doc(userId).collection('boats').doc(id).delete();
+  const handledeleteBoat = () => {
+
+    db.collection('users').doc(userId).collection('boats').get().then(querySnapshot => {
+      let changes = querySnapshot.docChanges();
+      const id = changes[key].doc.id
+      db.collection('users').doc(userId).collection('boats').doc(id).delete();
+     
+     })
+   
   }
   const classes = useStyles();
 
@@ -73,10 +79,10 @@ const  CustomCard = (props) => {
       </CardActionArea>
       <CardActions>
       <Button size="small" color="primary" onClick={handledeleteBoat}>
-           delete 
+           delete boat
         </Button>
         <Button size="small" color="primary" onClick={handleExpandClick}>
-          expand
+          Books
         </Button>
         <IconButton
           className={clsx(classes.expand, {
