@@ -13,11 +13,11 @@ const Home = () => {
   const user = auth.currentUser;
   const userId = user.uid;
   const boats = db.collection('users').doc(userId).collection('boats');
-  // const books = boats.collection('books'); //à ajouter title et author
   const [open, setOpen] = useState(false);
   const [boatName,setBoatName] = useState('');
   const [dataReturned ,setDataReturned] = useState(false);
   const [snap,setSnap] = useState('');
+  const [books,setBooks] = useState('');
 
       const handleLogOut = () => {
         auth.signOut();
@@ -42,7 +42,8 @@ const Home = () => {
         handleClose();
 
         const data = {
-          boatname: boatName
+          boatname: boatName,
+          books: []
         }
 
         await boats.doc().set(data,{ merge: true })
@@ -52,9 +53,11 @@ const Home = () => {
         boats.onSnapshot(Snapshot => {
         let changes = Snapshot.docChanges();
         changes.forEach(change => {
-          if(change.type == 'added'){
+          if(change.type === 'added'){
             getdocument();
-          }else if (change.type == 'removed'){
+          }else if (change.type === 'removed'){
+            getdocument();
+          }else if (change.type === 'modified'){
             getdocument();
           }
         })
@@ -63,13 +66,16 @@ const Home = () => {
   
 
     const getdocument = async () => {
-    const data = [];
-     await  boats.get().then(querySnapshot => {
+    const title = [];
+    const books = [];
+    await  boats.get().then(querySnapshot => {
             querySnapshot.forEach ((el) => {
-              data.push(Object.values(el.data()).toString());
+              title.push(Object.values(el.data().boatname));
+              books.push(Object.values(el.data().books));
           })
      });
-     setSnap(data);
+     setSnap(title);
+     setBooks(books);
      setDataReturned(true);
   }
 
@@ -89,7 +95,7 @@ const Home = () => {
          {
           dataReturned ?
           snap.map((val,i) => (
-            <CustomCard key={i} clef={i} title={val} />
+              <CustomCard key={i} clef={i} title={val} books={books[i]} />
          ))
          :<h1>loading..</h1> 
         }  

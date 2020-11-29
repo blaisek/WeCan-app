@@ -43,9 +43,12 @@ const useStyles = makeStyles((theme) => ({
 const  CustomCard = (props) => {
 
   let key = props.clef;
+  let books = props.books;
   const user = auth.currentUser;
   const userId = user.uid;
+  const boats = db.collection('users').doc(userId).collection('boats');
   const [expanded, setExpanded] = React.useState(false);
+  const [bookItem,setBookItem] = React.useState('');
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -53,14 +56,27 @@ const  CustomCard = (props) => {
 
   const handledeleteBoat = () => {
 
-    db.collection('users').doc(userId).collection('boats').get().then(querySnapshot => {
+    boats.get().then(querySnapshot => {
       let changes = querySnapshot.docChanges();
       const id = changes[key].doc.id
-      db.collection('users').doc(userId).collection('boats').doc(id).delete();
+      boats.doc(id).delete();
      
      })
    
   }
+
+  const addBook = () => {
+
+    boats.get().then(querySnapshot => {
+      let changes = querySnapshot.docChanges();
+      const id = changes[key].doc.id
+      boats.doc(id).set({
+        books: [bookItem],
+      },{merge:true})
+     })
+     setBookItem('');
+  }
+
   const classes = useStyles();
 
   return (
@@ -105,15 +121,23 @@ const  CustomCard = (props) => {
             label="Add Book Title and Author"
             type="text"
             fullWidth
+            value={bookItem}
+            onChange={e=> setBookItem(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
-          <Button color="primary">
+          <Button color="primary" onClick={addBook}>
             send
           </Button>
           </DialogActions>
         <Typography gutterBottom variant="h5" component="h2">
-          les misérables victor hugo
+          <ul>
+            {
+              books.map((el,i) => (
+                <li key={i}>{el}</li> 
+                ))
+              }
+          </ul>
         </Typography>
       </CardContent>
       </Collapse>
