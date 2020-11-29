@@ -15,7 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import clsx from 'clsx';
 import ship from '../img/Ship.jpg';
-import {auth,db} from '../dataBase/firebase';
+import {auth,db,array} from '../dataBase/firebase';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,9 +70,9 @@ const  CustomCard = (props) => {
     boats.get().then(querySnapshot => {
       let changes = querySnapshot.docChanges();
       const id = changes[key].doc.id
-      boats.doc(id).set({
-        books: [bookItem],
-      },{merge:true})
+      boats.doc(id).update({
+        books: array.arrayUnion(bookItem),
+      })
      })
      setBookItem('');
   }
