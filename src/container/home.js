@@ -49,8 +49,8 @@ const Home = () => {
         await boats.doc().set(data,{ merge: true })
     }
 
-    const handleChanges =  () => {
-        boats.onSnapshot(Snapshot => {
+    const handleChanges = async () => {
+       await boats.onSnapshot(Snapshot => {
         let changes = Snapshot.docChanges();
         changes.forEach(change => {
           if(change.type === 'added'){
