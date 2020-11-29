@@ -49,7 +49,6 @@ const  CustomCard = (props) => {
   const boats = db.collection('users').doc(userId).collection('boats');
   const [expanded, setExpanded] = React.useState(false);
   const [bookItem,setBookItem] = React.useState('');
-  const [dataReturned ,setDataReturned] = React.useState(false);
 
 
   const handleExpandClick = () => {
@@ -77,7 +76,6 @@ const  CustomCard = (props) => {
       })
      })
      setBookItem('');
-     setDataReturned(true);
   }
 
   const classes = useStyles();
@@ -130,18 +128,19 @@ const  CustomCard = (props) => {
         </DialogContent>
         <DialogActions>
           <Button color="primary" onClick={addBook}>
-            send
+            add
           </Button>
           </DialogActions>
         <Typography gutterBottom variant="h5" component="h2">
           <ul>
             {
-              dataReturned ?
+              (books === undefined) ?
+              <h3>no Books yet</h3>
+              :
               books.map((el,i) => (
                 <li key={i}>{el}</li> 
                 ))
-                :<h3>no Books yet</h3> 
-              }
+            }
           </ul>
         </Typography>
       </CardContent>

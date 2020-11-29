@@ -97,7 +97,7 @@ const Home = () => {
           snap.map((val,i) => (
               <CustomCard key={i} clef={i} title={val} books={books[i]} />
          ))
-         :<h1>loading..</h1> 
+         :<h1>Waiting for the boat..</h1> 
         }  
     </div>
     );
