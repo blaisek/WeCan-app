@@ -49,6 +49,8 @@ const  CustomCard = (props) => {
   const boats = db.collection('users').doc(userId).collection('boats');
   const [expanded, setExpanded] = React.useState(false);
   const [bookItem,setBookItem] = React.useState('');
+  const [dataReturned ,setDataReturned] = React.useState(false);
+
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -75,6 +77,7 @@ const  CustomCard = (props) => {
       })
      })
      setBookItem('');
+     setDataReturned(true);
   }
 
   const classes = useStyles();
@@ -133,9 +136,11 @@ const  CustomCard = (props) => {
         <Typography gutterBottom variant="h5" component="h2">
           <ul>
             {
+              dataReturned ?
               books.map((el,i) => (
                 <li key={i}>{el}</li> 
                 ))
+                :<h1>loading..</h1> 
               }
           </ul>
         </Typography>
