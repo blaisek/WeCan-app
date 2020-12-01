@@ -13,12 +13,23 @@ import Collapse from '@material-ui/core/Collapse';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined';
 import clsx from 'clsx';
 import ship from '../img/Ship.jpg';
 import {auth,db,array} from '../dataBase/firebase';
 
 
 const useStyles = makeStyles((theme) => ({
+
+  p: {
+    fontSize: 15
+  }
+  ,
   root: {
     minWidth: 345,
     float: 'left',
@@ -78,6 +89,16 @@ const  CustomCard = (props) => {
      setBookItem('');
   }
 
+// récupérer le contenu de books array et delete le premier ou le dernier élément ajouté
+
+  const deleteBook = () => {
+
+    //const obj = { field1, field2 ... } 
+    // collectionRef.doc(docId).update({
+    //   myArray: firebase.firestore.FieldValue.arrayRemove(obj)
+    // })
+  }
+
   const classes = useStyles();
 
   return (
@@ -131,18 +152,26 @@ const  CustomCard = (props) => {
             add
           </Button>
           </DialogActions>
-        <Typography gutterBottom variant="h5" component="h2">
-          <ul>
-            {
-              (books === undefined) ?
-              <h3>no Books yet</h3>
-              :
-              books.map((el,i) => (
-                <li key={i}>{el}</li> 
-                ))
-            }
-          </ul>
-        </Typography>
+          <div className={classes.p}>
+            <List>
+              {
+              books === undefined?
+              <h3>no Books yet</h3>:
+              books.map((el,i) =>(
+                <ListItem key={i}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MenuBookOutlinedIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={el}>
+                  </ListItemText>
+                </ListItem>
+              ))
+              }
+            </List>
+          </div>
+          
       </CardContent>
       </Collapse>
     </Card>
