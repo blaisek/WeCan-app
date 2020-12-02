@@ -98,8 +98,8 @@ const  CustomCard = (props) => {
       let list = [];
       boats.doc(id).get().then(snap => {
       list = snap.data().books;
-      if(list !== ''){
         let lastEl = list.pop();
+      if(lastEl !== undefined){
         boats.doc(id).update({
       books: array.arrayRemove(lastEl)
     })
