@@ -77,27 +77,36 @@ const  CustomCard = (props) => {
    
   }
 
-  const addBook = () => {
+  const addBook = async () => {
 
-    boats.get().then(querySnapshot => {
+   await boats.get().then(querySnapshot => {
       let changes = querySnapshot.docChanges();
-      const id = changes[key].doc.id
-      boats.doc(id).update({
-        books: array.arrayUnion(bookItem),
-      })
+      const id = changes[key].doc.id;
+      if(bookItem !== ''){
+        boats.doc(id).update({
+          books: array.arrayUnion(bookItem),
+        })
+      }
      })
      setBookItem('');
   }
 
-// récupérer le contenu de books array et delete le premier ou le dernier élément ajouté
-
-  const deleteBook = () => {
-
-    //const obj = { field1, field2 ... } 
-    // collectionRef.doc(docId).update({
-    //   myArray: firebase.firestore.FieldValue.arrayRemove(obj)
-    // })
-  }
+  const deleteBook = async () => {
+    await boats.get().then(querySnapshot => {
+      let changes = querySnapshot.docChanges();
+      const id = changes[key].doc.id;
+      let list = [];
+      boats.doc(id).get().then(snap => {
+      list = snap.data().books;
+      if(list !== ''){
+        let lastEl = list.pop();
+        boats.doc(id).update({
+      books: array.arrayRemove(lastEl)
+    })
+      }else{return}
+    })
+  })
+}
 
   const classes = useStyles();
 
@@ -151,6 +160,9 @@ const  CustomCard = (props) => {
           <Button color="primary" onClick={addBook}>
             add
           </Button>
+          <Button color="primary" onClick={deleteBook}>
+            dell
+          </Button>
           </DialogActions>
           <div className={classes.p}>
             <List>
@@ -170,8 +182,7 @@ const  CustomCard = (props) => {
               ))
               }
             </List>
-          </div>
-          
+          </div>        
       </CardContent>
       </Collapse>
     </Card>
